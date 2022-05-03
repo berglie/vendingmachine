@@ -4,12 +4,12 @@
     {
         private static void Main(string[] args)
         {
-            SodaMachine sodaMachine = new SodaMachine();
-            sodaMachine.Start();
+            VendingMachine VendingMachine = new VendingMachine();
+            VendingMachine.Start();
         }
     }
 
-    public class SodaMachine
+    public class VendingMachine
     {
         private static int money;
 
