@@ -6,7 +6,8 @@ internal class Program
 {
     private static void Main(string[] args)
     {
-        var vendingMachine = new Models.VendingMachine();
+        var inventory = new Inventory();
+        var vendingMachine = new Models.VendingMachine(inventory);
         vendingMachine.Start();
     }
 }
