@@ -15,3 +15,5 @@ Vendeelicious is the main project containing all the logic for the vending machi
 
 ## Vendee SMS System
 ![Vendee SMS System](https://user-images.githubusercontent.com/98617835/167498246-413cf579-9d27-4d31-9be8-d8fc46745bb1.png)
+
+Vendee SMS System is using ZeroMQ for communicating with the vending machine. ZeroMQ is a brokerless library, and in this project used for request-response pattern.
