@@ -3,7 +3,7 @@ using VendingMachine.Interfaces;
 
 namespace VendingMachine.Models;
 
-public class Inventory
+public class Inventory : IInventory
 {
     public Inventory() => Items = new Dictionary<IItem, int>();
 
