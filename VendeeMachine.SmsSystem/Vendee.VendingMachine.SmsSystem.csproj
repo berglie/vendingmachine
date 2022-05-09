@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <PackageReference Include="NetMQ" Version="4.0.1.8" />
+    <PackageReference Include="Spectre.Console" Version="0.44.0" />
   </ItemGroup>
 
 </Project>

@@ -15,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\VendeeMachine.SmsSystem\VendeeMachine.SmsSystem.csproj" />
+    <ProjectReference Include="..\VendeeMachine.SmsSystem\Vendee.VendingMachine.SmsSystem.csproj" />
     <ProjectReference Include="..\VendingMachine\Vendee.VendingMachine.csproj" />
   </ItemGroup>
 

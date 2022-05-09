@@ -1,5 +1,6 @@
 ﻿using NetMQ;
 using NetMQ.Sockets;
+using Spectre.Console;
 using Vendee.VendingMachine.Exceptions;
 using Vendee.VendingMachine.Interfaces;
 
@@ -15,20 +16,26 @@ public class SmsService : ISmsService, IDisposable
 
     public string ReadSms()
     {
-        var timeout = !_responseSocket.TryReceiveFrameString(TimeSpan.FromSeconds(TimeoutSeconds), out var receivedSms);
+        return AnsiConsole.Status()
+            .Start("Waiting for SMS...", ctx =>
+            {
+                ctx.Spinner(Spinner.Known.Clock);
+                var timeout =
+                    !_responseSocket.TryReceiveFrameString(TimeSpan.FromSeconds(TimeoutSeconds), out var receivedSms);
 
-        if (timeout)
-        {
-            throw new TimeoutException("Did not receive any sms withing x seconds");
-        }
+                if (timeout)
+                {
+                    throw new TimeoutException("Did not receive any sms withing x seconds");
+                }
 
-        if (!receivedSms.ToUpperInvariant().StartsWith($"{SmsCodeWord} "))
-        {
-            throw new SmsCodeWordException($"SMS must start with code work {SmsCodeWord}");
-        }
+                if (!receivedSms.ToUpperInvariant().StartsWith($"{SmsCodeWord} "))
+                {
+                    throw new SmsCodeWordException($"SMS must start with code work {SmsCodeWord}");
+                }
 
-        var productName = receivedSms.Split(' ', 2)[1];
-        return productName;
+                var productName = receivedSms.Split(' ', 2)[1];
+                return productName;
+            });
     }
 
     public void SendSms(string message) => _responseSocket.SendFrame(message);

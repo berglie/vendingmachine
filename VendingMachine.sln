@@ -5,9 +5,9 @@ VisualStudioVersion = 17.0.31912.275
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vendee.VendingMachine", "VendingMachine\Vendee.VendingMachine.csproj", "{7178F373-EBFB-484E-B403-94747AC86BD9}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VendeeMachine.SmsSystem", "VendeeMachine.SmsSystem\VendeeMachine.SmsSystem.csproj", "{0F86C03F-D306-4D6D-9AD5-C0A0326F02CF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vendee.VendingMachine.SmsSystem", "VendeeMachine.SmsSystem\Vendee.VendingMachine.SmsSystem.csproj", "{0F86C03F-D306-4D6D-9AD5-C0A0326F02CF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vendee.VendingMachine.UnitTests", "Vendee.VendingMachine.UnitTests\Vendee.VendingMachine.UnitTests.csproj", "{5BA307AC-2C29-451C-AD75-4B86366C7A20}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vendee.VendingMachine.UnitTests", "Vendee.VendingMachine.UnitTests\Vendee.VendingMachine.UnitTests.csproj", "{5BA307AC-2C29-451C-AD75-4B86366C7A20}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

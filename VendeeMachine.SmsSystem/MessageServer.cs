@@ -1,7 +1,7 @@
 ﻿using NetMQ;
 using NetMQ.Sockets;
 
-namespace VendeeMachine.SmsSystem;
+namespace Vendee.VendingMachine.SmsSystem;
 
 public class MessageServer : IDisposable
 {
