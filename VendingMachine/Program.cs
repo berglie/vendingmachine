@@ -8,6 +8,7 @@ internal class Program
     {
         var inventory = new Inventory();
         var vendingMachine = new Models.VendingMachine(inventory);
+        vendingMachine.InsertMoney(100);
         vendingMachine.Start();
     }
 }

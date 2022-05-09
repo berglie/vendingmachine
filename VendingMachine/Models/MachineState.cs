@@ -11,6 +11,6 @@ public enum MachineState
     OrderItem,
     [Description("SMS order - Order by SMS")]
     SmsOrder,
-    [Description("Recall - Refund money")]
-    RecallMoney
+    [Description("Refund - Refund money")]
+    RefundMoney
 }

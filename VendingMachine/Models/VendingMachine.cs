@@ -1,4 +1,5 @@
-﻿using VendingMachine.Interfaces;
+﻿using VendingMachine.Exceptions;
+using VendingMachine.Interfaces;
 
 namespace VendingMachine.Models;
 
@@ -31,6 +32,20 @@ public class VendingMachine
         return refund;
     }
 
+    public IItem DispenseItem(IItem item)
+    {
+        if (!HasSufficientFunds(item))
+        {
+            throw new InsufficientFundsException($"Out of balance! You are missing {item.Price - Balance} funds.");
+        }
+
+        _inventory.Deduct(item);
+        Balance -= item.Price;
+        return item;
+    }
+
+    private bool HasSufficientFunds(IItem item) => Balance >= item.Price;
+
     /// <summary>
     /// This is the starter method for the machine
     /// </summary>
@@ -39,7 +54,7 @@ public class VendingMachine
         var availableStates = Enum.GetValues(typeof(MachineState)).Cast<MachineState>()
             .Where(x => x != MachineState.Idle);
 
-        var state = MachineState.InsertMoney;
+        var state = MachineState.OrderItem;
 
         while (true)
         {
@@ -53,10 +68,11 @@ public class VendingMachine
                     Console.ReadKey();
                     break;
                 case MachineState.OrderItem:
+                    DispenseItem(_inventory.Items.First().Key);
                     break;
                 case MachineState.SmsOrder:
                     break;
-                case MachineState.RecallMoney:
+                case MachineState.RefundMoney:
                     RefundMoney();
                     break;
                 default:
