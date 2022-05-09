@@ -1,8 +1,8 @@
 ﻿namespace VendingMachine.Models;
 
-public class Soda
+public class Soda : Drink
 {
-    public string Name { get; set; }
+    public Soda(string name, string manufacturer, decimal price, decimal volume) : base(name, manufacturer, price, volume) { }
 
-    public int Nr { get; set; }
+    public static Soda CreateDefault(string name, string manufacturer, decimal price) => new(name, manufacturer, price, 0.5m);
 }
