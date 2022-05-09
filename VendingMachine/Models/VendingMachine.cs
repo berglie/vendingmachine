@@ -24,6 +24,13 @@ public class VendingMachine
 
     public decimal InsertMoney(decimal money) => Balance += money;
 
+    public decimal RefundMoney()
+    {
+        var refund = Balance;
+        Balance = 0;
+        return refund;
+    }
+
     /// <summary>
     /// This is the starter method for the machine
     /// </summary>
@@ -50,6 +57,7 @@ public class VendingMachine
                 case MachineState.SmsOrder:
                     break;
                 case MachineState.RecallMoney:
+                    RefundMoney();
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
