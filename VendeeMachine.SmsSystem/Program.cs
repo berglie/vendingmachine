@@ -1,13 +1,12 @@
-﻿using NetMQ;
-using NetMQ.Sockets;
+﻿using VendeeMachine.SmsSystem;
 
-using var requestSocket = new RequestSocket(">tcp://localhost:5555");
+var messageServer = new MessageServer(">tcp://localhost:5555");
 
 while (true)
 {
     Console.WriteLine("Input SMS: ");
     var message = Console.ReadLine();
-    requestSocket.SendFrame(message);
-    var response = requestSocket.ReceiveFrameString();
+    messageServer.SendMessage(message);
+    var response = messageServer.ReceiveMessage();
     Console.WriteLine($"Response: {response}");
 }

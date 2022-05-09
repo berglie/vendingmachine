@@ -1,4 +1,4 @@
-﻿namespace VendingMachine.Models;
+﻿namespace Vendee.VendingMachine.Models;
 
 public class Beer : Drink
 {

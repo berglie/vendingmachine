@@ -1,6 +1,6 @@
-﻿using VendingMachine.Models;
+﻿using Vendee.VendingMachine.Models;
 
-namespace VendingMachine.Interfaces;
+namespace Vendee.VendingMachine.Interfaces;
 
 public interface IItem : IEquatable<Item>
 {

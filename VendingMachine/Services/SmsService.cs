@@ -1,16 +1,17 @@
 ﻿using NetMQ;
 using NetMQ.Sockets;
-using VendingMachine.Interfaces;
+using Vendee.VendingMachine.Exceptions;
+using Vendee.VendingMachine.Interfaces;
 
-namespace VendingMachine.Services;
+namespace Vendee.VendingMachine.Services;
 
-public class SmsService : ISmsService
+public class SmsService : ISmsService, IDisposable
 {
     private const string SmsCodeWord = "VENDEE";
     private const int TimeoutSeconds = 10;
     private readonly ResponseSocket _responseSocket;
 
-    public SmsService() => _responseSocket = new ResponseSocket("@tcp://*:5555");
+    public SmsService(string address) => _responseSocket = new ResponseSocket(address);
 
     public string ReadSms()
     {
@@ -20,22 +21,17 @@ public class SmsService : ISmsService
         {
             throw new TimeoutException("Did not receive any sms withing x seconds");
         }
-        try
-        {
-            if (!receivedSms.ToUpperInvariant().StartsWith($"{SmsCodeWord} "))
-            {
-                _responseSocket.SendFrame($"SMS must start with code work {SmsCodeWord}");
-            }
 
-            var productName = receivedSms.Split(' ', 2)[1];
-            return productName;
-        }
-        catch (Exception e)
+        if (!receivedSms.ToUpperInvariant().StartsWith($"{SmsCodeWord} "))
         {
-            _responseSocket.SendFrame(e.Message);
-            throw;
+            throw new SmsCodeWordException($"SMS must start with code work {SmsCodeWord}");
         }
+
+        var productName = receivedSms.Split(' ', 2)[1];
+        return productName;
     }
 
     public void SendSms(string message) => _responseSocket.SendFrame(message);
+
+    public void Dispose() => _responseSocket?.Dispose();
 }

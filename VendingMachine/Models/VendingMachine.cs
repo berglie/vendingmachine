@@ -1,7 +1,7 @@
-﻿using VendingMachine.Exceptions;
-using VendingMachine.Interfaces;
+﻿using Vendee.VendingMachine.Exceptions;
+using Vendee.VendingMachine.Interfaces;
 
-namespace VendingMachine.Models;
+namespace Vendee.VendingMachine.Models;
 
 public class VendingMachine
 {
@@ -18,6 +18,7 @@ public class VendingMachine
 
     public void Initialize()
     {
+        _inventory.Add(new Soda("Coca Cola", "The Coca-Cola Company", 27, 0.33m), 1);
         _inventory.Add(new Soda("Fanta", "The Coca-Cola Company", 27, 0.33m), 1);
         _inventory.Add(new Soda("Sprite", "The Coca-Cola Company", 27, 0.33m), 0);
         _inventory.Add(new Soda("Solo", "Ringnes AS", 28, 0.33m), 10);
@@ -47,6 +48,20 @@ public class VendingMachine
 
     private bool HasSufficientFunds(IItem item) => Balance >= item.Price;
 
+    public IItem DispenseItemFromSms()
+    {
+        var productName = _smsService.ReadSms();
+        if (!_inventory.Contains(productName))
+        {
+            throw new ItemDoesNotExistException($"Vendeelicious does not have '{productName}' in it's inventory.");
+        }
+
+        var item = _inventory.GetItem(productName);
+        _inventory.Deduct(item);
+        _smsService.SendSms($"{item.Name} was successfully dispensed.");
+        return item;
+    }
+
     /// <summary>
     /// This is the starter method for the machine
     /// </summary>
@@ -74,17 +89,7 @@ public class VendingMachine
                 case MachineState.SmsOrder:
                     try
                     {
-                        var productName = _smsService.ReadSms();
-                        if (!_inventory.Contains(productName))
-                        {
-                            _smsService.SendSms(
-                                $"Vendeelicious does not have '{productName}' in it's inventory.");
-                            break;
-                        }
-
-                        var item = _inventory.GetItem(productName);
-                        _inventory.Deduct(item);
-                        _smsService.SendSms($"{item.Name} was successfully dispensed.");
+                        DispenseItemFromSms();
                     }
                     catch (TimeoutException tEx)
                     {
