@@ -5,7 +5,7 @@ using Vendee.VendingMachine.Utilities;
 
 namespace Vendee.VendingMachine.Models;
 
-public class VendingMachine
+public class VendingMachine : IVendingMachine
 {
     private readonly IInventory _inventory;
     private readonly ISmsService _smsService;
