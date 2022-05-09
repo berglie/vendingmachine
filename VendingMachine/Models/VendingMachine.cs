@@ -6,16 +6,17 @@ namespace VendingMachine.Models;
 public class VendingMachine
 {
     private readonly IInventory _inventory;
+    private readonly ISmsService _smsService;
 
-    public VendingMachine(IInventory inventory)
+    public VendingMachine(IInventory inventory, ISmsService smsService)
     {
         _inventory = inventory;
-        Initialize();
+        _smsService = smsService;
     }
 
     public decimal Balance { get; private set; }
 
-    private void Initialize()
+    public void Initialize()
     {
         _inventory.Add(new Soda("Fanta", "The Coca-Cola Company", 27, 0.33m), 1);
         _inventory.Add(new Soda("Sprite", "The Coca-Cola Company", 27, 0.33m), 0);
@@ -54,7 +55,7 @@ public class VendingMachine
         var availableStates = Enum.GetValues(typeof(MachineState)).Cast<MachineState>()
             .Where(x => x != MachineState.Idle);
 
-        var state = MachineState.OrderItem;
+        var state = MachineState.SmsOrder;
 
         while (true)
         {
@@ -71,6 +72,28 @@ public class VendingMachine
                     DispenseItem(_inventory.Items.First().Key);
                     break;
                 case MachineState.SmsOrder:
+                    try
+                    {
+                        var productName = _smsService.ReadSms();
+                        if (!_inventory.Contains(productName))
+                        {
+                            _smsService.SendSms(
+                                $"Vendeelicious does not have '{productName}' in it's inventory.");
+                            break;
+                        }
+
+                        var item = _inventory.GetItem(productName);
+                        _inventory.Deduct(item);
+                        _smsService.SendSms($"{item.Name} was successfully dispensed.");
+                    }
+                    catch (TimeoutException tEx)
+                    {
+                        // Ignore
+                    }
+                    catch (Exception e)
+                    {
+                        _smsService.SendSms(e.Message);
+                    }
                     break;
                 case MachineState.RefundMoney:
                     RefundMoney();
