@@ -2,9 +2,8 @@
 
 public interface IVendingMachine
 {
-    decimal Balance { get; }
-    decimal InsertMoney(decimal money);
-    decimal RefundMoney();
-    IItem DispenseItem(IItem item);
     void Start();
+    decimal InsertMoney(decimal amount);
+    decimal RefundMoney();
+    IItem GetItemFromSms();
 }

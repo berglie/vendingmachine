@@ -1,11 +1,11 @@
-using Microsoft.VisualStudio.TestPlatform.TestHost;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Vendee.VendingMachine.Exceptions;
 using Vendee.VendingMachine.Models;
 using Vendee.VendingMachine.Services;
-using VendeeMachine.SmsSystem;
+using Vendee.VendingMachine.SmsSystem;
 
 namespace Vendee.VendingMachine.UnitTests;
+
 [TestClass]
 public class VendingMachineUnitTests
 {
@@ -14,9 +14,11 @@ public class VendingMachineUnitTests
     {
         var insertAmount = 42;
         var expected = 42;
-        var vendingMachine = new Models.VendingMachine(null, null);
 
-        var balance = vendingMachine.InsertMoney(insertAmount);
+        var paymentService = new PaymentService();
+        var vendingMachine = new Models.VendingMachine(null, paymentService, null, null, null);
+
+        var balance =  vendingMachine.InsertMoney(insertAmount);
 
         Assert.AreEqual(expected, balance, "Money not added to balance correctly");
         Assert.AreEqual(expected, vendingMachine.Balance, "Money not added to balance correctly");
@@ -25,9 +27,10 @@ public class VendingMachineUnitTests
     [TestMethod]
     public void RefundMoney_UpdatesBalance()
     {
+        var paymentService = new PaymentService();
         var insertAmount = 42;
         var expected = 0;
-        var vendingMachine = new Models.VendingMachine(null, null);
+        var vendingMachine = new Models.VendingMachine(null, paymentService, null, null, null);
 
         vendingMachine.InsertMoney(insertAmount);
         var returnedMoney = vendingMachine.RefundMoney();
@@ -41,10 +44,12 @@ public class VendingMachineUnitTests
     {
         var price = 42;
         var insertAmount = 50;
-
         var expectedDispensedSoda = Soda.CreateDefault("Coca Cola", "The Coca-Cola Company", price);
+
         var inventory = new Inventory();
-        var vendingMachine = new Models.VendingMachine(inventory, null);
+        var paymentService = new PaymentService();
+        var dispenseService = new DispenseService(inventory, paymentService);
+        var vendingMachine = new Models.VendingMachine(inventory, paymentService, dispenseService, null, null);
 
         vendingMachine.InsertMoney(insertAmount);
         inventory.Add(expectedDispensedSoda);
@@ -62,7 +67,9 @@ public class VendingMachineUnitTests
 
         var expectedDispensedSoda = Soda.CreateDefault("Coca Cola", "The Coca-Cola Company", price);
         var inventory = new Inventory();
-        var vendingMachine = new Models.VendingMachine(inventory, null);
+        var paymentService = new PaymentService();
+        var dispenseService = new DispenseService(inventory, paymentService);
+        var vendingMachine = new Models.VendingMachine(inventory, paymentService, dispenseService, null, null);
 
         vendingMachine.InsertMoney(insertAmount);
         inventory.Add(expectedDispensedSoda, 0);
@@ -78,7 +85,9 @@ public class VendingMachineUnitTests
 
         var expectedDispensedSoda = Soda.CreateDefault("Coca Cola", "The Coca-Cola Company", price);
         var inventory = new Inventory();
-        var vendingMachine = new Models.VendingMachine(inventory, null);
+        var paymentService = new PaymentService();
+        var dispenseService = new DispenseService(inventory, paymentService);
+        var vendingMachine = new Models.VendingMachine(inventory, paymentService, dispenseService, null, null);
 
         vendingMachine.InsertMoney(insertAmount);
         inventory.Add(expectedDispensedSoda);
@@ -95,11 +104,11 @@ public class VendingMachineUnitTests
         using var smsService = new SmsService("@tcp://*:5556");
         using var smsServer = new MessageServer(">tcp://localhost:5556");
         var inventory = new Inventory();
-        var vendingMachine = new Models.VendingMachine(inventory, smsService);
+        var vendingMachine = new Models.VendingMachine(inventory, null, null, null, smsService);
 
         smsServer.SendMessage($"{codeWord} {productId}");
 
-        Assert.ThrowsException<ItemDoesNotExistException>(() => vendingMachine.DispenseItemFromSms());
+        Assert.ThrowsException<ItemDoesNotExistException>(() => vendingMachine.GetItemFromSms());
     }
 
 
@@ -112,11 +121,11 @@ public class VendingMachineUnitTests
         using var smsService = new SmsService("@tcp://*:5557");
         using var smsServer = new MessageServer(">tcp://localhost:5557");
         var inventory = new Inventory();
-        var vendingMachine = new Models.VendingMachine(inventory, smsService);
+        var vendingMachine = new Models.VendingMachine(inventory, null, null, null, smsService);
 
         smsServer.SendMessage($"{codeWord} {productId}");
 
-        Assert.ThrowsException<SmsCodeWordException>(() => vendingMachine.DispenseItemFromSms());
+        Assert.ThrowsException<SmsCodeWordException>(() => vendingMachine.GetItemFromSms());
     }
 
     [TestMethod]
@@ -129,11 +138,13 @@ public class VendingMachineUnitTests
         using var smsService = new SmsService("@tcp://*:5558");
         using var smsServer = new MessageServer(">tcp://localhost:5558");
         var inventory = new Inventory();
-        var vendingMachine = new Models.VendingMachine(inventory, smsService);
+        var paymentService = new PaymentService();
+        var dispenseService = new DispenseService(inventory, paymentService);
+        var vendingMachine = new Models.VendingMachine(inventory, paymentService, dispenseService, null, smsService);
         inventory.Add(expectedDispensedSoda);
 
         smsServer.SendMessage($"{codeWord} {productId}");
-        var dispensedItem = vendingMachine.DispenseItemFromSms();
+        var dispensedItem = vendingMachine.GetItemFromSms();
 
         Assert.AreEqual(expectedDispensedSoda, dispensedItem, "Soda dispensed is not the same as the requested soda");
     }
