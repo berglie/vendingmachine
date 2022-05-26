@@ -1,6 +1,6 @@
-﻿using Vendee.VendingMachine.Interfaces;
+﻿using Vendee.VendingMachine.Core.Interfaces;
 
-namespace Vendee.VendingMachine.Services;
+namespace Vendee.VendingMachine.Core.Services;
 
 public class DispenseService : IDispenseService
 {

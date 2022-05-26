@@ -1,4 +1,4 @@
-﻿namespace Vendee.VendingMachine.Models;
+﻿namespace Vendee.VendingMachine.Core.Models;
 
 public class Drink : Item
 {

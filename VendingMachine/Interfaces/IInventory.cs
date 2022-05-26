@@ -1,4 +1,4 @@
-﻿namespace Vendee.VendingMachine.Interfaces;
+﻿namespace Vendee.VendingMachine.Core.Interfaces;
 
 public interface IInventory
 {

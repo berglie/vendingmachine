@@ -1,4 +1,4 @@
-﻿namespace Vendee.VendingMachine.Exceptions;
+﻿namespace Vendee.VendingMachine.Core.Exceptions;
 
 public class OutOfStockException : Exception
 {

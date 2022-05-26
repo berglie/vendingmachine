@@ -1,7 +1,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Vendee.VendingMachine.Exceptions;
-using Vendee.VendingMachine.Models;
-using Vendee.VendingMachine.Services;
+using Vendee.VendingMachine.Core.Exceptions;
+using Vendee.VendingMachine.Core.Models;
+using Vendee.VendingMachine.Core.Services;
 using Vendee.VendingMachine.SmsSystem;
 
 namespace Vendee.VendingMachine.UnitTests;
@@ -16,7 +16,7 @@ public class VendingMachineUnitTests
         var expected = 42;
 
         var paymentService = new PaymentService();
-        var vendingMachine = new Models.VendingMachine(null, paymentService, null, null, null);
+        var vendingMachine = new Core.Models.VendingMachine(null, paymentService, null, null);
 
         var balance =  vendingMachine.InsertMoney(insertAmount);
 
@@ -30,7 +30,7 @@ public class VendingMachineUnitTests
         var paymentService = new PaymentService();
         var insertAmount = 42;
         var expected = 0;
-        var vendingMachine = new Models.VendingMachine(null, paymentService, null, null, null);
+        var vendingMachine = new Core.Models.VendingMachine(null, paymentService, null, null);
 
         vendingMachine.InsertMoney(insertAmount);
         var returnedMoney = vendingMachine.RefundMoney();
@@ -49,7 +49,7 @@ public class VendingMachineUnitTests
         var inventory = new Inventory();
         var paymentService = new PaymentService();
         var dispenseService = new DispenseService(inventory, paymentService);
-        var vendingMachine = new Models.VendingMachine(inventory, paymentService, dispenseService, null, null);
+        var vendingMachine = new Core.Models.VendingMachine(inventory, paymentService, dispenseService, null);
 
         vendingMachine.InsertMoney(insertAmount);
         inventory.Add(expectedDispensedSoda);
@@ -69,7 +69,7 @@ public class VendingMachineUnitTests
         var inventory = new Inventory();
         var paymentService = new PaymentService();
         var dispenseService = new DispenseService(inventory, paymentService);
-        var vendingMachine = new Models.VendingMachine(inventory, paymentService, dispenseService, null, null);
+        var vendingMachine = new Core.Models.VendingMachine(inventory, paymentService, dispenseService, null);
 
         vendingMachine.InsertMoney(insertAmount);
         inventory.Add(expectedDispensedSoda, 0);
@@ -87,7 +87,7 @@ public class VendingMachineUnitTests
         var inventory = new Inventory();
         var paymentService = new PaymentService();
         var dispenseService = new DispenseService(inventory, paymentService);
-        var vendingMachine = new Models.VendingMachine(inventory, paymentService, dispenseService, null, null);
+        var vendingMachine = new Core.Models.VendingMachine(inventory, paymentService, dispenseService, null);
 
         vendingMachine.InsertMoney(insertAmount);
         inventory.Add(expectedDispensedSoda);
@@ -104,7 +104,7 @@ public class VendingMachineUnitTests
         using var smsService = new SmsService("@tcp://*:5556");
         using var smsServer = new MessageServer(">tcp://localhost:5556");
         var inventory = new Inventory();
-        var vendingMachine = new Models.VendingMachine(inventory, null, null, null, smsService);
+        var vendingMachine = new Core.Models.VendingMachine(inventory, null, null, smsService);
 
         smsServer.SendMessage($"{codeWord} {productId}");
 
@@ -121,7 +121,7 @@ public class VendingMachineUnitTests
         using var smsService = new SmsService("@tcp://*:5557");
         using var smsServer = new MessageServer(">tcp://localhost:5557");
         var inventory = new Inventory();
-        var vendingMachine = new Models.VendingMachine(inventory, null, null, null, smsService);
+        var vendingMachine = new Core.Models.VendingMachine(inventory, null, null, smsService);
 
         smsServer.SendMessage($"{codeWord} {productId}");
 
@@ -140,7 +140,7 @@ public class VendingMachineUnitTests
         var inventory = new Inventory();
         var paymentService = new PaymentService();
         var dispenseService = new DispenseService(inventory, paymentService);
-        var vendingMachine = new Models.VendingMachine(inventory, paymentService, dispenseService, null, smsService);
+        var vendingMachine = new Core.Models.VendingMachine(inventory, paymentService, dispenseService, smsService);
         inventory.Add(expectedDispensedSoda);
 
         smsServer.SendMessage($"{codeWord} {productId}");

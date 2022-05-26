@@ -1,8 +1,7 @@
-﻿namespace Vendee.VendingMachine.Interfaces;
+﻿namespace Vendee.VendingMachine.Core.Interfaces;
 
 public interface IVendingMachine
 {
-    void Start();
     decimal InsertMoney(decimal amount);
     decimal RefundMoney();
     IItem GetItemFromSms();

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace Vendee.VendingMachine.Models;
+namespace Vendee.VendingMachine.Core.Models;
 
 public enum MachineState
 {

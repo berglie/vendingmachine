@@ -1,7 +1,7 @@
-﻿using Vendee.VendingMachine.Exceptions;
-using Vendee.VendingMachine.Interfaces;
+﻿using Vendee.VendingMachine.Core.Exceptions;
+using Vendee.VendingMachine.Core.Interfaces;
 
-namespace Vendee.VendingMachine.Models;
+namespace Vendee.VendingMachine.Core.Models;
 
 public class Inventory : IInventory
 {

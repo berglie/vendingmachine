@@ -1,11 +1,11 @@
 ﻿using Spectre.Console;
-using Vendee.VendingMachine.Interfaces;
-using Vendee.VendingMachine.Models;
-using Vendee.VendingMachine.Utilities;
+using Vendee.VendingMachine.Console.Utilities;
+using Vendee.VendingMachine.Core.Interfaces;
+using Vendee.VendingMachine.Core.Models;
 
-namespace Vendee.VendingMachine.Services;
+namespace Vendee.VendingMachine.Console;
 
-public class DisplayService : IDisplayService
+public class DisplayService
 {
     private readonly IInventory _inventory;
     private readonly IEnumerable<MachineState> _states;
@@ -64,9 +64,11 @@ public class DisplayService : IDisplayService
 
     public void DisplayError(string errorMessage) => AnsiConsole.MarkupLine($"\n[underline red]{errorMessage}[/]");
 
+    public void DisplayInfo(string infoMessage) => AnsiConsole.MarkupLine(infoMessage);
+
     public decimal DepositPrompt()
     {
-        return AnsiConsole.Prompt(
+        var depositAmount =  AnsiConsole.Prompt(
             new TextPrompt<decimal>("How much money do you want to insert?")
                 .PromptStyle("green")
                 .ValidationErrorMessage("[red]That's not a valid number![/]")
@@ -78,6 +80,9 @@ public class DisplayService : IDisplayService
                         _ => ValidationResult.Success(),
                     };
                 }));
+
+        AnsiConsole.MarkupLine($"[green]Adding {depositAmount} to credit[/]");
+        return depositAmount;
     }
 
     public MachineState SelectStatePrompt()
@@ -91,6 +96,15 @@ public class DisplayService : IDisplayService
                 .UseConverter(x => $"[yellow]{EnumHelper.GetDescription(x)}[/]"));
     }
 
+    public IItem ShowItemProgress(Func<IItem> func)
+    {
+        return AnsiConsole.Status()
+            .Start("Waiting for SMS...", ctx =>
+            {
+                ctx.Spinner(Spinner.Known.Clock);
+                return func();
+            });
+    }
 
     public IItem SelectItemPrompt()
     {
@@ -101,8 +115,6 @@ public class DisplayService : IDisplayService
                 .MoreChoicesText("[grey](Move up and down to reveal more items)[/]")
                 .AddChoices(_inventory.Items.Select(x => x.Key))
                 .UseConverter(x => $"[yellow]{x.Name}[/] [dim]({x.Manufacturer})[/]"));
-
-
     }
 
     private void ShowHeader()

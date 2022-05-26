@@ -1,8 +1,7 @@
-﻿using Spectre.Console;
-using Vendee.VendingMachine.Exceptions;
-using Vendee.VendingMachine.Interfaces;
+﻿using Vendee.VendingMachine.Core.Exceptions;
+using Vendee.VendingMachine.Core.Interfaces;
 
-namespace Vendee.VendingMachine.Services;
+namespace Vendee.VendingMachine.Core.Services;
 
 public class PaymentService : IPaymentService
 {
@@ -19,17 +18,12 @@ public class PaymentService : IPaymentService
         return Balance;
     }
 
-    public decimal Deposit(decimal money)
-    {
-        AnsiConsole.MarkupLine($"[green]Adding {money} to credit[/]");
-        return Balance += money;
-    }
+    public decimal Deposit(decimal money) => Balance += money;
 
     public decimal RefundMoney()
     {
         var refund = Balance;
         Balance = 0;
-        AnsiConsole.MarkupLine($"[red]Returning {refund} to customer[/]");
         return refund;
     }
 

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace Vendee.VendingMachine.Utilities;
+namespace Vendee.VendingMachine.Console.Utilities;
 
 internal class EnumHelper
 {

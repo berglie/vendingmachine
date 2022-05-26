@@ -1,6 +1,6 @@
-﻿using Vendee.VendingMachine.Interfaces;
+﻿using Vendee.VendingMachine.Core.Interfaces;
 
-namespace Vendee.VendingMachine.Models;
+namespace Vendee.VendingMachine.Core.Models;
 
 public abstract class Item : IItem
 {
